@@ -23,7 +23,7 @@ Przykładowy kod źródłowy pozwalający na:
 
 5. Sklonuj repozytorium z przykładowym kodem i przejdź do nowoutworzonego katalogu
    ```bash
-   git clone https://github.com/avedave/eskadra-bielik-misja1
+   git clone https://github.com/PrositAS/eskadra-bielik-misja1.git
    cd eskadra-bielik-misja1
    ```
 
@@ -77,6 +77,12 @@ Przykładowy kod źródłowy pozwalający na:
 
 >[!CAUTION]
 >Flaga `--allow-unauthenticated` udostępnia usługę publicznie w internecie i każdy kto zna URL, może zaczać z niej korzystać. W środowisku produkcyjnym zazwyczaj trzeba tę flagę usunąć i odpowiednio skonfigurować reguły dostępu.
+
+>[!TIP]
+>Alternatywnie, możesz uruchomić powyższą komendę korzystając ze skryptu `deploy-bielik.sh`
+   ```bash
+   deploy-bielik.sh
+   ```
 
 3. Uruchom poniższą komendę, aby sprawdzić pod jakim URL jest dostępny Bielik
 
@@ -247,6 +253,13 @@ graph TD
     ```
 >[!CAUTION]
 >Flaga `--allow-unauthenticated` udostępnia usługę publicznie w internecie i każdy kto zna URL, może zaczać z niej korzystać. W środowisku produkcyjnym zazwyczaj trzeba tę flagę usunąć i odpowiednio skonfigurować reguły dostępu.
+
+>[!TIP]
+>Alternatywnie, możesz uruchomić powyższą komendę korzystając ze skryptu `deploy-adk-agents.sh`
+
+   ```bash
+   deploy-adk-agents.sh
+   ```
 
 2. Narzędzie `gcloud` stworzy kontener na podstawie konfiguracji zawartej w `adk-agents/Dockerfile` i uruchomi usługę w Cloud Run, podając URL pod którym serwis będzie dostępny
 3. Wywołaj otrzymany URL w przeglądarce WWW aby mieć dostęp do środowiska ADK Web

@@ -71,7 +71,6 @@ silesian_audience_agent = Agent(
     description=("""Agent odpowiedzialny za tworzenie treści w języku śląskim..
                  (W oparciu o przekazaną listę faktów)"""),
     instruction=("""
-                Końcowy raport powinien być bardzo krótki i zwięzły.
                 Jesteś powieściowym twórcą specjalizującym się w tworzeniu powieści w języku śląskim. Na podstawie listy faktów {initial_facts}
                 stwórz powieść w języku śląskim. Powieść powinna być zwięzła i przejrzysta, najlepiej z humorystyczną puentą.
                 Odpowiez w języku śląskim, uywając śląskich zwrotów i śląskich słów.
