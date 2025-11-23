@@ -232,6 +232,58 @@ graph TD
 
 
 
+### 4.3 System agentowy - Planista Podróży po Polsce (`polish_travel_planner`)
+
+Ten kompleksowy system agentowy, działający w oparciu o model Bielik, demonstruje zaawansowane możliwości planowania i orkiestracji workflow w ADK. System wykorzystuje zarówno [Sequential Agents](https://google.github.io/adk-docs/agents/workflow-agents/#sequential-agent) jak i [Parallel Agents](https://google.github.io/adk-docs/agents/workflow-agents/#parallel-agent) do tworzenia szczegółowych, spersonalizowanych planów podróży po Polsce.
+
+System ma na celu stworzenie kompletnego, gotowego do użycia planu wycieczki na podstawie preferencji użytkownika. Showcaseuje możliwości Bielika w dziedzinie lokalnej wiedzy o Polsce, kulturze i praktycznych aspektach turystyki.
+
+Architektura systemu:
+
+- `polish_travel_planner_agent` - Główny agent sekwencyjny, który orchestruje cały proces planowania podróży
+- `destination_analyzer_agent` - Agent LLM analizujący preferencje użytkownika (góry vs morze, historia vs przyroda, itp.) i sugerujący odpowiednie destynacje w Polsce
+- `research_team` - Agent równoległy koordynujący pracę trzech wyspecjalizowanych ekspertów, którzy działają jednocześnie:
+  - `history_expert_agent` - Ekspert od polskiej historii i zabytków, dostarczający informacji o najważniejszych miejscach historycznych
+  - `practical_guide_agent` - Praktyczny przewodnik zajmujący się logistyką: transport, noclegi, gastronomia i koszty
+  - `cultural_activities_agent` - Znawca kultury lokalnej, festiwali, tradycji i aktywności na świeżym powietrzu
+- `itinerary_creator_agent` - Agent syntetyzujący wszystkie zebrane informacje w szczegółowy, dzień-po-dniu plan podróży z budżetem i praktycznymi wskazówkami
+
+```mermaid
+graph TD
+    subgraph polish_travel_planner_agent [polish_travel_planner_agent:SequentialAgent]
+        direction LR
+        A[destination_analyzer_agent:Agent] --> B[research_team:ParallelAgent]
+        B --> C[itinerary_creator_agent:Agent]
+    end
+
+    subgraph research_team [research_team:ParallelAgent]
+        direction TB
+        D[history_expert_agent:Agent]
+        E[practical_guide_agent:Agent]
+        F[cultural_activities_agent:Agent]
+    end
+
+    B -.-> D
+    B -.-> E
+    B -.-> F
+```
+
+
+**Przykładowe zapytania do przetestowania:**
+- "Chcę pojechać w góry na weekend, interesuje mnie historia i dobre jedzenie"
+- "Planuję rodzinną wycieczkę do Krakowa na 3 dni"
+- "Szukam spokojnego miejsca nad morzem, lubię przyrodę i długie spacery"
+- "Chciałbym zwiedzić Wrocław, interesuję się architekturą i życiem nocnym"
+
+1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
+2. Uruchom agenta w konsoli **Cloud Shell** i rozpocznij interakcję
+
+   ```bash
+    adk run polish_travel_planner/
+   ```
+
+
+
 ## 5. Przetestuj systemy agentowe w środowisku Cloud Shell + Web
 
 1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
