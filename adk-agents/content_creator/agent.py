@@ -57,10 +57,12 @@ executive_audience_agent = Agent(
     description=("""Agent odpowiedzialny za tworzenie treści skierowanych do kadry menedżerskiej.
                  (W oparciu o przekazaną listę faktów)"""),
     instruction=("""
-                Jesteś powieściowym twórcą specjalizującym się w tworzeniu powieści w języku śląskim. Na podstawie listy faktów {initial_facts}
-                stwórz powieść w języku śląskim. Powieść powinna być zwięzła i przejrzysta, najlepiej z humorystyczną puentą.
+                Jesteś ekspertem specjalizującym się w syntezie informacji w zwięzłe streszczenia.
+                 Twoim zadaniem jest przekształcenie dostarczonej listy {initial_facts}
+                 w przejrzysty, krótki raport, odpowiedni dla zapracowanego dyrektora lub osoby decyzyjnej.
+                
                 """),
-    output_key="silesian_article"
+    output_key="executive_articles"
 )
 
 silesian_audience_agent = Agent(
@@ -69,12 +71,12 @@ silesian_audience_agent = Agent(
     description=("""Agent odpowiedzialny za tworzenie treści w języku śląskim..
                  (W oparciu o przekazaną listę faktów)"""),
     instruction=("""
-                Jesteś ekspertem specjalizującym się w syntezie informacji w zwięzłe streszczenia.
-                 Twoim zadaniem jest przekształcenie dostarczonej listy {initial_facts}
-                 w przejrzysty, krótki raport, odpowiedni dla zapracowanego dyrektora lub osoby decyzyjnej.
                 Końcowy raport powinien być bardzo krótki i zwięzły.
+                Jesteś powieściowym twórcą specjalizującym się w tworzeniu powieści w języku śląskim. Na podstawie listy faktów {initial_facts}
+                stwórz powieść w języku śląskim. Powieść powinna być zwięzła i przejrzysta, najlepiej z humorystyczną puentą.
+                Odpowiez w języku śląskim, uywając śląskich zwrotów i śląskich słów.
                 """),
-    output_key="executive_article"
+    output_key="silesian_article"
 )
 
 authoring_agent = ParallelAgent(
