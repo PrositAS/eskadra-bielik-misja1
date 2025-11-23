@@ -157,6 +157,7 @@ Ten prosty system agentowy, działający jedynie w oparciu o model Bielik, jest 
 - `authoring_agent` - Agent równoległy - uruchamia pod-agentów równolegle. Zawiera dwóch pod-agentów, po jednym na każdą grupę docelową
 - `children_audience_agent` - Agent LLM odpowiedzialny za tworzenie treści skierowanych do dzieci.
 - `executive_audience_agent` - Agent LLM odpowiedzialny za tworzenie treści skierowanych do kadry zarządzającej.
+- `silesian_audience_agent` - Agent LLM odpowiedzialny za tworzenie treści po śląsku.
 
 ```mermaid
 graph TD
@@ -170,6 +171,7 @@ graph TD
         direction TB
         children_audience_agent("children_audience_agent:Agent");
         executive_audience_agent("executive_audience_agent:Agent");
+        silesian_audience_agent("silesian_audience_agent:Agent");
     end
 ```
 
