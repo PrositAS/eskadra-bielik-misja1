@@ -284,6 +284,76 @@ graph TD
 
 
 
+### 4.4 System agentowy - Ekspert Prawa Konsumenckiego (`order_compliant_agent`)
+
+Ten hybrydowy system agentowy, działający w oparciu o modele Gemini i Bielik, jest przykładem zastosowania [Agent-as-Tool](https://google.github.io/adk-docs/tools/function-tools/#agent-tool) oraz [Function Tools](https://google.github.io/adk-docs/tools/function-tools/#function-tool) w kontekście prawno-biznesowym. System demonstruje inteligentny routing zapytań i specjalizację agentów w polskim prawie konsumenckim.
+
+System ma na celu pomoc konsumentom w nawigacji przez proces reklamacji i zwrotów zamówień, dostarczając precyzyjnych instrukcji zgodnych z polskim prawem konsumenckim. Główny agent (Gemini) klasyfikuje intencję użytkownika i deleguje zadanie do odpowiedniego eksperta (Bielik).
+
+Architektura systemu:
+
+- `polish_consumer_law_agent` - Główny agent (Gemini) odpowiedzialny za wstępną analizę zapytania użytkownika, klasyfikację intencji (reklamacja vs zwrot vs inne) i delegowanie do odpowiedniego eksperta
+- `polish_complaints_law_expert_agent` - Wyspecjalizowany agent (Bielik) będący ekspertem od polskiego prawa reklamacyjnego. Dostarcza szczegółowych instrukcji krok po kroku dla procesu reklamacji uszkodzonych lub wadliwych produktów
+- `polish_complaints_law_expert_tool` - Narzędzie AgentTool opakowujące agenta eksperta od reklamacji
+- `polish_return_policies_expert_agent` - Wyspecjalizowany agent (Bielik) będący ekspertem od polskich przepisów dotyczących zwrotów. Wyjaśnia prawa konsumenta związane z 14-dniowym terminem odstąpienia od umowy
+- `polish_return_policies_expert_tool` - Narzędzie AgentTool opakowujące agenta eksperta od zwrotów
+- `no_return_complain_possible_response` - Prosta funkcja Pythona jako Function Tool, która informuje użytkownika, gdy reklamacja lub zwrot nie jest możliwy
+
+```mermaid
+graph TD
+    subgraph Consumer Law System
+        direction TB
+        
+        A[fa:fa-robot polish_consumer_law_agent<br/>Gemini - Router]
+        
+        subgraph Tools
+            direction TB
+            B[fa:fa-wrench polish_complaints_law_expert_tool<br/>AgentTool]
+            C[fa:fa-wrench polish_return_policies_expert_tool<br/>AgentTool]
+            D[fa:fa-wrench no_return_complain_possible_response<br/>Function Tool]
+        end
+        
+        E[fa:fa-robot polish_complaints_law_expert_agent<br/>Bielik - Reklamacje]
+        F[fa:fa-robot polish_return_policies_expert_agent<br/>Bielik - Zwroty]
+        
+        A --> B
+        A --> C
+        A --> D
+        B --> E
+        C --> F
+    end
+```
+
+**Co demonstruje ten system:**
+- ✅ Hybrydowa architektura (Gemini jako router, Bielik jako ekspert domeny)
+- ✅ Agent-as-Tool pattern (2 wyspecjalizowane agenty jako narzędzia)
+- ✅ Function Tools (prosta funkcja Pythona jako narzędzie)
+- ✅ Inteligentny routing zapytań na podstawie intencji użytkownika
+- ✅ Specjalizacja agentów (każdy ekspert zna swoją domenę prawa)
+- ✅ Lokalna wiedza Bielika (polskie prawo konsumenckie)
+- ✅ Praktyczne zastosowanie biznesowe (customer support)
+
+**Przykładowe zapytania do przetestowania:**
+- "Otrzymałem uszkodzony produkt. Jak złożyć reklamację?"
+- "Chcę zwrócić zamówienie, które nie spełnia moich oczekiwań"
+- "Produkt działa, ale nie pasuje. Czy mogę go zwrócić?"
+- "W jakim terminie muszę zgłosić reklamację?"
+
+**Scenariusze użycia:**
+- E-commerce customer support
+- Automatyzacja obsługi reklamacji i zwrotów
+- Edukacja konsumentów o ich prawach
+- First-line support przed eskalacją do specjalisty
+
+1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
+2. Uruchom agenta w konsoli **Cloud Shell** i rozpocznij interakcję
+
+   ```bash
+    adk run order_compliant_agent/
+   ```
+
+
+
 ## 5. Przetestuj systemy agentowe w środowisku Cloud Shell + Web
 
 1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
