@@ -33,7 +33,7 @@ topic_expander_agent = Agent(
                 3. Zsyntezuj najważniejsze aspekty i wnioski i przedstaw jako listę maksymalnie pięć faktów.
                  
                  """),
-    output_key="initial_facts"
+    output_key="initial_facts"    
 )
 
 children_audience_agent = Agent(
@@ -60,16 +60,29 @@ executive_audience_agent = Agent(
                 Jesteś ekspertem specjalizującym się w syntezie informacji w zwięzłe streszczenia.
                  Twoim zadaniem jest przekształcenie dostarczonej listy {initial_facts}
                  w przejrzysty, krótki raport, odpowiedni dla zapracowanego dyrektora lub osoby decyzyjnej.
-                Końcowy raport powinien być bardzo krótki i zwięzły.
+                
                 """),
-    output_key="executive_article"
+    output_key="executive_articles"
+)
+
+silesian_audience_agent = Agent(
+    name="silesian_audience_agent",
+    model=LiteLlm(model=f"ollama_chat/{BIELIK_MODEL_NAME}"),
+    description=("""Agent odpowiedzialny za tworzenie treści w języku śląskim..
+                 (W oparciu o przekazaną listę faktów)"""),
+    instruction=("""
+                Jesteś powieściowym twórcą specjalizującym się w tworzeniu powieści w języku śląskim. Na podstawie listy faktów {initial_facts}
+                stwórz powieść w języku śląskim. Powieść powinna być zwięzła i przejrzysta, najlepiej z humorystyczną puentą.
+                Odpowiez w języku śląskim, uywając śląskich zwrotów i śląskich słów.
+                """),
+    output_key="silesian_article"
 )
 
 authoring_agent = ParallelAgent(
     name="authoring_agent",
     description=("""Uruchamia w spósób równoległy pod-agentów odpowiedzialnych za tworzenie
                  treści dla różnych grup docelowych i platform."""),
-    sub_agents=[children_audience_agent, executive_audience_agent]
+    sub_agents=[children_audience_agent, executive_audience_agent, silesian_audience_agent]
 )
 
 content_creator_agent = SequentialAgent(

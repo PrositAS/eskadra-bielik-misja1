@@ -23,7 +23,7 @@ Przykładowy kod źródłowy pozwalający na:
 
 5. Sklonuj repozytorium z przykładowym kodem i przejdź do nowoutworzonego katalogu
    ```bash
-   git clone https://github.com/avedave/eskadra-bielik-misja1
+   git clone https://github.com/PrositAS/eskadra-bielik-misja1.git
    cd eskadra-bielik-misja1
    ```
 
@@ -77,6 +77,12 @@ Przykładowy kod źródłowy pozwalający na:
 
 >[!CAUTION]
 >Flaga `--allow-unauthenticated` udostępnia usługę publicznie w internecie i każdy kto zna URL, może zaczać z niej korzystać. W środowisku produkcyjnym zazwyczaj trzeba tę flagę usunąć i odpowiednio skonfigurować reguły dostępu.
+
+>[!TIP]
+>Alternatywnie, możesz uruchomić powyższą komendę korzystając ze skryptu `deploy-bielik.sh`
+   ```bash
+   deploy-bielik.sh
+   ```
 
 3. Uruchom poniższą komendę, aby sprawdzić pod jakim URL jest dostępny Bielik
 
@@ -157,6 +163,7 @@ Ten prosty system agentowy, działający jedynie w oparciu o model Bielik, jest 
 - `authoring_agent` - Agent równoległy - uruchamia pod-agentów równolegle. Zawiera dwóch pod-agentów, po jednym na każdą grupę docelową
 - `children_audience_agent` - Agent LLM odpowiedzialny za tworzenie treści skierowanych do dzieci.
 - `executive_audience_agent` - Agent LLM odpowiedzialny za tworzenie treści skierowanych do kadry zarządzającej.
+- `silesian_audience_agent` - Agent LLM odpowiedzialny za tworzenie treści po śląsku.
 
 ```mermaid
 graph TD
@@ -170,6 +177,7 @@ graph TD
         direction TB
         children_audience_agent("children_audience_agent:Agent");
         executive_audience_agent("executive_audience_agent:Agent");
+        silesian_audience_agent("silesian_audience_agent:Agent");
     end
 ```
 
@@ -224,6 +232,128 @@ graph TD
 
 
 
+### 4.3 System agentowy - Planista Podróży po Polsce (`polish_travel_planner`)
+
+Ten kompleksowy system agentowy, działający w oparciu o model Bielik, demonstruje zaawansowane możliwości planowania i orkiestracji workflow w ADK. System wykorzystuje zarówno [Sequential Agents](https://google.github.io/adk-docs/agents/workflow-agents/#sequential-agent) jak i [Parallel Agents](https://google.github.io/adk-docs/agents/workflow-agents/#parallel-agent) do tworzenia szczegółowych, spersonalizowanych planów podróży po Polsce.
+
+System ma na celu stworzenie kompletnego, gotowego do użycia planu wycieczki na podstawie preferencji użytkownika. Showcaseuje możliwości Bielika w dziedzinie lokalnej wiedzy o Polsce, kulturze i praktycznych aspektach turystyki.
+
+Architektura systemu:
+
+- `polish_travel_planner_agent` - Główny agent sekwencyjny, który orchestruje cały proces planowania podróży
+- `destination_analyzer_agent` - Agent LLM analizujący preferencje użytkownika (góry vs morze, historia vs przyroda, itp.) i sugerujący odpowiednie destynacje w Polsce
+- `research_team` - Agent równoległy koordynujący pracę trzech wyspecjalizowanych ekspertów, którzy działają jednocześnie:
+  - `history_expert_agent` - Ekspert od polskiej historii i zabytków, dostarczający informacji o najważniejszych miejscach historycznych
+  - `practical_guide_agent` - Praktyczny przewodnik zajmujący się logistyką: transport, noclegi, gastronomia i koszty
+  - `cultural_activities_agent` - Znawca kultury lokalnej, festiwali, tradycji i aktywności na świeżym powietrzu
+- `itinerary_creator_agent` - Agent syntetyzujący wszystkie zebrane informacje w szczegółowy, dzień-po-dniu plan podróży z budżetem i praktycznymi wskazówkami
+
+```mermaid
+graph TD
+    subgraph polish_travel_planner_agent [polish_travel_planner_agent:SequentialAgent]
+        direction LR
+        A[destination_analyzer_agent:Agent] --> B[research_team:ParallelAgent]
+        B --> C[itinerary_creator_agent:Agent]
+    end
+
+    subgraph research_team [research_team:ParallelAgent]
+        direction TB
+        D[history_expert_agent:Agent]
+        E[practical_guide_agent:Agent]
+        F[cultural_activities_agent:Agent]
+    end
+
+    B -.-> D
+    B -.-> E
+    B -.-> F
+```
+
+
+**Przykładowe zapytania do przetestowania:**
+- "Chcę pojechać w góry na weekend, interesuje mnie historia i dobre jedzenie"
+- "Planuję rodzinną wycieczkę do Krakowa na 3 dni"
+- "Szukam spokojnego miejsca nad morzem, lubię przyrodę i długie spacery"
+- "Chciałbym zwiedzić Wrocław, interesuję się architekturą i życiem nocnym"
+
+1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
+2. Uruchom agenta w konsoli **Cloud Shell** i rozpocznij interakcję
+
+   ```bash
+    adk run polish_travel_planner/
+   ```
+
+
+
+### 4.4 System agentowy - Ekspert Prawa Konsumenckiego (`order_compliant_agent`)
+
+Ten hybrydowy system agentowy, działający w oparciu o modele Gemini i Bielik, jest przykładem zastosowania [Agent-as-Tool](https://google.github.io/adk-docs/tools/function-tools/#agent-tool) oraz [Function Tools](https://google.github.io/adk-docs/tools/function-tools/#function-tool) w kontekście prawno-biznesowym. System demonstruje inteligentny routing zapytań i specjalizację agentów w polskim prawie konsumenckim.
+
+System ma na celu pomoc konsumentom w nawigacji przez proces reklamacji i zwrotów zamówień, dostarczając precyzyjnych instrukcji zgodnych z polskim prawem konsumenckim. Główny agent (Gemini) klasyfikuje intencję użytkownika i deleguje zadanie do odpowiedniego eksperta (Bielik).
+
+Architektura systemu:
+
+- `polish_consumer_law_agent` - Główny agent (Gemini) odpowiedzialny za wstępną analizę zapytania użytkownika, klasyfikację intencji (reklamacja vs zwrot vs inne) i delegowanie do odpowiedniego eksperta
+- `polish_complaints_law_expert_agent` - Wyspecjalizowany agent (Bielik) będący ekspertem od polskiego prawa reklamacyjnego. Dostarcza szczegółowych instrukcji krok po kroku dla procesu reklamacji uszkodzonych lub wadliwych produktów
+- `polish_complaints_law_expert_tool` - Narzędzie AgentTool opakowujące agenta eksperta od reklamacji
+- `polish_return_policies_expert_agent` - Wyspecjalizowany agent (Bielik) będący ekspertem od polskich przepisów dotyczących zwrotów. Wyjaśnia prawa konsumenta związane z 14-dniowym terminem odstąpienia od umowy
+- `polish_return_policies_expert_tool` - Narzędzie AgentTool opakowujące agenta eksperta od zwrotów
+- `no_return_complain_possible_response` - Prosta funkcja Pythona jako Function Tool, która informuje użytkownika, gdy reklamacja lub zwrot nie jest możliwy
+
+```mermaid
+graph TD
+    subgraph Consumer Law System
+        direction TB
+        
+        A[fa:fa-robot polish_consumer_law_agent<br/>Gemini - Router]
+        
+        subgraph Tools
+            direction TB
+            B[fa:fa-wrench polish_complaints_law_expert_tool<br/>AgentTool]
+            C[fa:fa-wrench polish_return_policies_expert_tool<br/>AgentTool]
+            D[fa:fa-wrench no_return_complain_possible_response<br/>Function Tool]
+        end
+        
+        E[fa:fa-robot polish_complaints_law_expert_agent<br/>Bielik - Reklamacje]
+        F[fa:fa-robot polish_return_policies_expert_agent<br/>Bielik - Zwroty]
+        
+        A --> B
+        A --> C
+        A --> D
+        B --> E
+        C --> F
+    end
+```
+
+**Co demonstruje ten system:**
+- ✅ Hybrydowa architektura (Gemini jako router, Bielik jako ekspert domeny)
+- ✅ Agent-as-Tool pattern (2 wyspecjalizowane agenty jako narzędzia)
+- ✅ Function Tools (prosta funkcja Pythona jako narzędzie)
+- ✅ Inteligentny routing zapytań na podstawie intencji użytkownika
+- ✅ Specjalizacja agentów (każdy ekspert zna swoją domenę prawa)
+- ✅ Lokalna wiedza Bielika (polskie prawo konsumenckie)
+- ✅ Praktyczne zastosowanie biznesowe (customer support)
+
+**Przykładowe zapytania do przetestowania:**
+- "Otrzymałem uszkodzony produkt. Jak złożyć reklamację?"
+- "Chcę zwrócić zamówienie, które nie spełnia moich oczekiwań"
+- "Produkt działa, ale nie pasuje. Czy mogę go zwrócić?"
+- "W jakim terminie muszę zgłosić reklamację?"
+
+**Scenariusze użycia:**
+- E-commerce customer support
+- Automatyzacja obsługi reklamacji i zwrotów
+- Edukacja konsumentów o ich prawach
+- First-line support przed eskalacją do specjalisty
+
+1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
+2. Uruchom agenta w konsoli **Cloud Shell** i rozpocznij interakcję
+
+   ```bash
+    adk run order_compliant_agent/
+   ```
+
+
+
 ## 5. Przetestuj systemy agentowe w środowisku Cloud Shell + Web
 
 1. Upewnij się, że jesteś w katalogu `adk_agents` oraz że wszystkie zmienne środowiskowe są załadowane
@@ -245,6 +375,13 @@ graph TD
     ```
 >[!CAUTION]
 >Flaga `--allow-unauthenticated` udostępnia usługę publicznie w internecie i każdy kto zna URL, może zaczać z niej korzystać. W środowisku produkcyjnym zazwyczaj trzeba tę flagę usunąć i odpowiednio skonfigurować reguły dostępu.
+
+>[!TIP]
+>Alternatywnie, możesz uruchomić powyższą komendę korzystając ze skryptu `deploy-adk-agents.sh`
+
+   ```bash
+   deploy-adk-agents.sh
+   ```
 
 2. Narzędzie `gcloud` stworzy kontener na podstawie konfiguracji zawartej w `adk-agents/Dockerfile` i uruchomi usługę w Cloud Run, podając URL pod którym serwis będzie dostępny
 3. Wywołaj otrzymany URL w przeglądarce WWW aby mieć dostęp do środowiska ADK Web
