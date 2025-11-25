@@ -842,8 +842,11 @@ graph TD
 >Alternatywnie, możesz uruchomić powyższą komendę korzystając ze skryptu `deploy-adk-agents.sh`
 
    ```bash
-   deploy-adk-agents.sh
+   ./deploy-adk-agents.sh
    ```
 
 2. Narzędzie `gcloud` stworzy kontener na podstawie konfiguracji zawartej w `adk-agents/Dockerfile` i uruchomi usługę w Cloud Run, podając URL pod którym serwis będzie dostępny
 3. Wywołaj otrzymany URL w przeglądarce WWW aby mieć dostęp do środowiska ADK Web
+
+## 7. Zawnioskuj o certyfikat
+1. Przejdź do [instrukcji](bielik_warsztaty_certyfikat.md)
