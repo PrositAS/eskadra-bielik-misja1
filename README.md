@@ -230,7 +230,7 @@ graph TD
   1 Skopiuj przygotowane komendy do terminala CLI i naciśnij na klawaiturze klawisz ENTER
 
   ```bash
-   git clone https://github.com/Legard777/eskadra-bielik-misja1
+   git clone https://github.com/prositas/eskadra-bielik-misja1
    cd eskadra-bielik-misja1
   ```
 
